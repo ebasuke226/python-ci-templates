@@ -1,3 +1,19 @@
+# === build / package metadata ===
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sample-pkg"                # 適宜変更OK
+version = "0.1.0"
+description = "Sample package for CI artifacts"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# === format / lint / type-check ===
 [tool.black]
 line-length = 88
 
@@ -10,14 +26,13 @@ strict = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 
-# ---- Ruff（lint + format + import 並べ替え）----
 [tool.ruff]
 line-length = 88
 
 [tool.ruff.lint]
 # E=pycodestyle, F=pyflakes, I=import（=isort相当）
 select = ["E", "F", "I"]
-ignore = ["E203"]
+ignore = ["E203"]   # Black互換のため W503 はRuff非対象なので書かない
 
 [tool.ruff.format]
 # 既定がBlack互換
