@@ -26,5 +26,3 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
-          build-args: |
-            WHEEL=dist/*.whl
