@@ -3,4 +3,6 @@ flake8
 isort
 mypy
 ruff
+build
 setuptools>=78.1.1
+wheel
