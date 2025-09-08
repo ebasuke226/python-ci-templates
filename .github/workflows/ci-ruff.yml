@@ -51,10 +51,7 @@ jobs:
       - name: Smoke install
         run: |
           pip install dist/*.whl
-          python - <<'PY'
-from sample_pkg import __version__
-print("import ok:", __version__)
-PY
+          python -c "from sample_pkg import __version__; print('import ok:', __version__)"
 
       # ---- 成果物を保存（後工程/CDやデバッグで使える）
       - name: Upload artifact
