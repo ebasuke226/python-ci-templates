@@ -73,7 +73,6 @@ jobs:
         if: ${{ hashFiles('docker-compose.yml') != '' }}
         run: docker compose build
 
-# そのまま流用でOK。name の値を " " で囲むだけ
 - name: "Smoke: API (http://localhost:8000/health[|z])"
   if: ${{ hashFiles('docker-compose.yml') != '' }}
   run: |
