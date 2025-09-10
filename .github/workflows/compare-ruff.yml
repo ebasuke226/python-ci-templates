@@ -50,10 +50,11 @@ jobs:
             "${{ steps.t_mypy.outputs.duration }}" >> timings.csv
 
           jq -n --arg wf "ruff" --arg sha "$GITHUB_SHA" \
-            --argjson rfmt ${{ steps.t_rfmt.outputs.duration || 0 }} \
-            --argjson rchk ${{ steps.t_rlint.outputs.duration || 0 }} \
-            --argjson mypy ${{ steps.t_mypy.outputs.duration   || 0 }} \
-            '{workflow:$wf, sha:$sha, ruff_format:rfmt, ruff_check:rchk, mypy:mypy}' > timings.json
+            --argjson rfmt  ${{ steps.t_rfmt.outputs.duration  || 0 }} \
+            --argjson rchk  ${{ steps.t_rlint.outputs.duration || 0 }} \
+            --argjson mypy  ${{ steps.t_mypy.outputs.duration  || 0 }} \
+            '{workflow:$wf, sha:$sha, ruff_format:$rfmt, ruff_check:$rchk, mypy:$mypy}' > timings.json
+
 
           {
             echo "### Ruff timings (sec)"

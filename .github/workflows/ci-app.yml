@@ -73,47 +73,47 @@ jobs:
         if: ${{ hashFiles('docker-compose.yml') != '' }}
         run: docker compose build
 
-      - name: Smoke: API (http://localhost:8000/health[|z])
-        if: ${{ hashFiles('docker-compose.yml') != '' }}
-        run: |
-          docker compose up -d api || true
-          for p in /health /healthz; do
-            for i in $(seq 1 10); do
-              if curl -fsS "http://localhost:8000${p}" > /dev/null; then
-                echo "API OK at ${p}"
-                docker compose logs api --tail=50
-                exit 0
-              fi
-              sleep 3
-            done
-          done
-          docker compose logs api
-          docker compose down -v || true
-          exit 1
+# そのまま流用でOK。name の値を " " で囲むだけ
+- name: "Smoke: API (http://localhost:8000/health[|z])"
+  if: ${{ hashFiles('docker-compose.yml') != '' }}
+  run: |
+    docker compose up -d api || true
+    for p in /health /healthz; do
+      for i in $(seq 1 10); do
+        if curl -fsS "http://localhost:8000${p}" > /dev/null; then
+          echo "API OK at ${p}"
+          docker compose logs api --tail=50
+          exit 0
+        fi
+        sleep 3
+      done
+    done
+    docker compose logs api
+    docker compose down -v || true
+    exit 1
 
-      - name: Smoke: Web (3000 or 8501)
-        if: ${{ hashFiles('docker-compose.yml') != '' }}
-        run: |
-          # web が無ければ skip
-          if ! docker compose config --services | grep -q '^web$'; then
-            echo "No 'web' service -> skip"
-            exit 0
-          fi
-          docker compose up -d web || true
-          for port in 3000 8501; do
-            for i in $(seq 1 10); do
-              if curl -fsS "http://localhost:${port}/" > /dev/null; then
-                echo "WEB OK at port ${port}"
-                docker compose logs web --tail=50
-                docker compose down -v || true
-                exit 0
-              fi
-              sleep 3
-            done
+    - name: "Smoke: Web (3000 or 8501)"
+      if: ${{ hashFiles('docker-compose.yml') != '' }}
+      run: |
+        if ! docker compose config --services | grep -q '^web$'; then
+          echo "No 'web' service -> skip"
+          exit 0
+        fi
+        docker compose up -d web || true
+        for port in 3000 8501; do
+          for i in $(seq 1 10); do
+            if curl -fsS "http://localhost:${port}/" > /dev/null; then
+              echo "WEB OK at port ${port}"
+              docker compose logs web --tail=50
+              docker compose down -v || true
+              exit 0
+            fi
+            sleep 3
           done
-          docker compose logs web
-          docker compose down -v || true
-          exit 1
+        done
+        docker compose logs web
+        docker compose down -v || true
+        exit 1
 
       - name: Compose down
         if: ${{ hashFiles('docker-compose.yml') != '' }}

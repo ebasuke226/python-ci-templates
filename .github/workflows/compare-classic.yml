@@ -62,7 +62,8 @@ jobs:
             --argjson isort  ${{ steps.t_isort.outputs.duration  || 0 }} \
             --argjson flake8 ${{ steps.t_flake8.outputs.duration || 0 }} \
             --argjson mypy   ${{ steps.t_mypy.outputs.duration   || 0 }} \
-            '{workflow:$wf, sha:$sha, black:black, isort:isort, flake8:flake8, mypy:mypy}' > timings.json
+            '{workflow:$wf, sha:$sha, black:$black, isort:$isort, flake8:$flake8, mypy:$mypy}' > timings.json
+
 
           {
             echo "### Classic timings (sec)"
